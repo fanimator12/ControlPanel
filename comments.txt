@@ -1,0 +1,18 @@
+1) You chose to implement the application using selected front-end technology because:
+
+
+
+2) List every library / technology you decided to use in the front-end and back-end (except Python and Fast-API)
+and briefly explain why:
+
+
+
+3) What was the most time consuming part of this challenge?
+
+
+
+4) If this was a real application, what are a few features you would add to improve user-experience?
+
+
+
+5) If you have any additional remarks, feel free to add them here:
