@@ -81,9 +81,13 @@ def update_control_panel(controlpanel_id: int, controlpanel: ControlPanel):
 
 # REMOVE EXISTING CONTROL PANEL
 @app.delete("/controlpanels")
-def delete_control_panel(controlpanel_id: int = Query(..., description = "The ID of removable Control Panel", gt=0)):
-    if controlpanel_id not in db:
-        raise HTTPException(status_code = 404, detail = "Control Panel doesn't exist.")
+def delete_control_panel(controlpanel_id: int):
+    deleted_panel = db.query(models.ControlPanel).filter(models.ControlPanel.id == controlpanel_id).first()
 
-    del db[controlpanel_id]
-    return {"Success": "Control Panel successfully removed."}
+    if deleted_panel is None:
+        raise HTTPException(status_code = status.HTTP_404_NOT_FOUND, detail = "Control Panel not found.")
+
+    db.delete(deleted_panel)
+    db.commit()
+    
+    return deleted_panel

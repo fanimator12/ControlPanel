@@ -12,8 +12,8 @@ ANSWER:
 2. Material UI (It's a UI framework that provides React components and are easily maintainable.)
 
 - Back-end:
-1. Postgresql
-2. SQLAlchemy (Created database with it)
+1. Postgresql with pgAdmin 4 (most familiar tool for me to create database)
+2. SQLAlchemy (created database with it)
 
 3) What was the most time consuming part of this challenge?
 
@@ -24,3 +24,6 @@ ANSWER:
 I'd let the user to also select types of control panels or change the dimensions of the control panel grid (like instead of 3x3, create a 5x5 sized grid).
 
 5) If you have any additional remarks, feel free to add them here:
+
+NOTES:
+- When running the server with `uvicorn main:app --reload`, add `/docs/` to the URL to display the Swagger UI of the API (ex. http://127.0.0.1:8000/docs).
