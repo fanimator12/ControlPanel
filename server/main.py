@@ -1,8 +1,12 @@
-from typing import Optional
+from typing import Optional, List
 from fastapi import FastAPI, Path, Query, HTTPException, status
 from pydantic import BaseModel
+from database import SessionLocal
+import models
 
 app = FastAPI()
+
+db = SessionLocal()
 
 class ControlPanelClass:
     def __init__(self, *, name: str, parameterA: int = None, parameterB: int = None, parameterC: int = None, parameterD: int = None, parameterE: int = None):
@@ -25,44 +29,48 @@ class ControlPanel(BaseModel):
     class Config:
         orm_mode = True
 
-controlpanels = {}
-
 # CREATE NEW CONTROL PANEL
-@app.post("/create-controlpanel/{controlpanel_id}")
-def create_control_panel(controlpanel_id: int, controlpanel: ControlPanel):
-    if controlpanel_id in controlpanels:
-        raise HTTPException(status_code=400, detail="Control Panel already exists.")
+@app.post("/controlpanels", response_model = ControlPanel, status_code = status.HTTP_201_CREATED)
+def create_control_panel(controlpanel: ControlPanel):
+    new = models.ControlPanel(
+        name = controlpanel.name,
+        parameterA = controlpanel.parameterA,
+        parameterB = controlpanel.parameterB,
+        parameterC = controlpanel.parameterC,
+        parameterD = controlpanel.parameterD,
+        parameterE = controlpanel.parameterE
+    )
 
-    controlpanels[controlpanel_id] = controlpanel
-    return controlpanels[controlpanel_id]
+    db.add(new)
+    db.commit()
+    
+    return new
 
 # GET CONTROL PANEL
-@app.get("/get-controlpanel/{controlpanel_id}")
-def get_control_panel(controlpanel_id: int = Path(None, description="The ID of a given control panel")):
-    for controlpanel_id in controlpanels:
-        return controlpanels[controlpanel_id].name
-    raise HTTPException(status_code=404, detail="Control Panel not found.")
+@app.get("/controlpanels/{controlpanel_id}")
+def get_control_panel(controlpanel_id: int = Path(None, description = "The ID of a given control panel")):
+    for controlpanel_id in db:
+        return db[controlpanel_id].name
+    raise HTTPException(status_code = 404, detail = "Control Panel not found.")
 
-# GET LIST OF CONTROL PANELS
-@app.get("/get-controlpanels")
-def get_control_panels():
-    for controlpanel_id in controlpanels:
-        return controlpanels[controlpanel_id].name
-    raise HTTPException(status_code=404, detail="Control Panels are not found.")
+# GET ALL CONTROL PANELS
+@app.get("/controlpanels", response_model = List[ControlPanel], status_code=200)
+def get_all_control_panels():
+    return db.query(models.ControlPanel).all()
+    raise HTTPException(status_code = 404, detail = "Control Panels are not found.")
 
-# GET CONTROL PANEL BY NAME
-@app.get("/get-controlpanel-by-name")
-def get_control_panel_by_name(name: str = Query(None, title="Name", description="Name of the Control Panel")):
-    for controlpanel_id in controlpanels:
-        if controlpanels[controlpanel_id].name == name:
-            return controlpanels[controlpanel_id]
-    raise HTTPException(status_code=404, detail="Control Panel not found.")
+# UPDATE CONTROL PANEL
+@app.put("/controlpanels/{controlpanel_id}")
+def get_control_panel(controlpanel_id: int = Path(None, description = "The ID of a given control panel")):
+    for controlpanel_id in db:
+        return db[controlpanel_id].name
+    raise HTTPException(status_code = 404, detail = "Control Panel not found.")
 
 # REMOVE EXISTING CONTROL PANEL
-@app.delete("/delete-controlpanel")
-def delete_control_panel(controlpanel_id: int = Query(..., description="The ID of removable Control Panel", gt=0)):
-    if controlpanel_id not in controlpanels:
-        raise HTTPException(status_code=404, detail="Control Panel doesn't exist.")
+@app.delete("/controlpanels")
+def delete_control_panel(controlpanel_id: int = Query(..., description = "The ID of removable Control Panel", gt=0)):
+    if controlpanel_id not in db:
+        raise HTTPException(status_code = 404, detail = "Control Panel doesn't exist.")
 
-    del controlpanels[controlpanel_id]
-    return {"Succes": "Control Panel succesfully removed."}
+    del db[controlpanel_id]
+    return {"Success": "Control Panel successfully removed."}

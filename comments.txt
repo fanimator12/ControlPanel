@@ -1,11 +1,19 @@
 1) You chose to implement the application using selected front-end technology because:
 
-
+ANSWER: 
+I have chosen Vite + React with Typescript as I am more familiar with using these technologies and I am comfortable working with them.
 
 2) List every library / technology you decided to use in the front-end and back-end (except Python and Fast-API)
 and briefly explain why:
 
+ANSWER:
+- Front-end:
+1. Vite + React with Typescript (explained earlier)
+2. Material UI (It's a UI framework that provides React components and are easily maintainable.)
 
+- Back-end:
+1. Postgresql
+2. SQLAlchemy (Created database with it)
 
 3) What was the most time consuming part of this challenge?
 
@@ -13,6 +21,6 @@ and briefly explain why:
 
 4) If this was a real application, what are a few features you would add to improve user-experience?
 
-
+I'd let the user to also select types of control panels or change the dimensions of the control panel grid (like instead of 3x3, create a 5x5 sized grid).
 
 5) If you have any additional remarks, feel free to add them here:
