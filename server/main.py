@@ -9,7 +9,8 @@ app = FastAPI()
 db = SessionLocal()
 
 class ControlPanelClass:
-    def __init__(self, *, name: str, parameterA: int = None, parameterB: int = None, parameterC: int = None, parameterD: int = None, parameterE: int = None):
+    def __init__(self, *, id: int, name: str, parameterA: int = None, parameterB: int = None, parameterC: int = None, parameterD: int = None, parameterE: int = None):
+        self.id = id
         self.name: name
         self.parameterA: parameterA
         self.parameterB: parameterB
@@ -19,6 +20,7 @@ class ControlPanelClass:
 
 # Serializer
 class ControlPanel(BaseModel):
+    id: int
     name: str
     parameterA: Optional[int] = None
     parameterB: Optional[int] = None
@@ -32,7 +34,7 @@ class ControlPanel(BaseModel):
 # CREATE NEW CONTROL PANEL
 @app.post("/controlpanels", response_model = ControlPanel, status_code = status.HTTP_201_CREATED)
 def create_control_panel(controlpanel: ControlPanel):
-    new = models.ControlPanel(
+    new_panel = models.ControlPanel(
         name = controlpanel.name,
         parameterA = controlpanel.parameterA,
         parameterB = controlpanel.parameterB,
@@ -41,30 +43,41 @@ def create_control_panel(controlpanel: ControlPanel):
         parameterE = controlpanel.parameterE
     )
 
-    db.add(new)
+    db_item = db.query(models.ControlPanel).filter(models.ControlPanel.name==new_panel.name).first()
+
+    if db_item is not None:
+        raise HTTPException(status_code = 400, detail = "Control Panel already exists.")
+    
+    db.add(new_panel)
     db.commit()
     
-    return new
+    return new_panel
 
 # GET CONTROL PANEL
-@app.get("/controlpanels/{controlpanel_id}")
-def get_control_panel(controlpanel_id: int = Path(None, description = "The ID of a given control panel")):
-    for controlpanel_id in db:
-        return db[controlpanel_id].name
-    raise HTTPException(status_code = 404, detail = "Control Panel not found.")
+@app.get("/controlpanels/{controlpanel_id}", response_model = ControlPanel, status_code = status.HTTP_200_OK)
+def get_control_panel(controlpanel_id: int):
+    controlpanel = db.query(models.ControlPanel).filter(models.ControlPanel.id == controlpanel_id).first()
+    return controlpanel
 
 # GET ALL CONTROL PANELS
-@app.get("/controlpanels", response_model = List[ControlPanel], status_code=200)
+@app.get("/controlpanels", response_model = List[ControlPanel], status_code = 200)
 def get_all_control_panels():
     return db.query(models.ControlPanel).all()
-    raise HTTPException(status_code = 404, detail = "Control Panels are not found.")
 
 # UPDATE CONTROL PANEL
-@app.put("/controlpanels/{controlpanel_id}")
-def get_control_panel(controlpanel_id: int = Path(None, description = "The ID of a given control panel")):
-    for controlpanel_id in db:
-        return db[controlpanel_id].name
-    raise HTTPException(status_code = 404, detail = "Control Panel not found.")
+@app.put("/controlpanels/{controlpanel_id}", response_model = ControlPanel, status_code = status.HTTP_200_OK)
+def update_control_panel(controlpanel_id: int, controlpanel: ControlPanel):
+    updated_panel = db.query(models.ControlPanel).filter(models.ControlPanel.id == controlpanel_id).first()
+    updated_panel.name = controlpanel.name
+    updated_panel.parameterA = controlpanel.parameterA
+    updated_panel.parameterB = controlpanel.parameterB
+    updated_panel.parameterC = controlpanel.parameterC
+    updated_panel.parameterD = controlpanel.parameterD
+    updated_panel.parameterE = controlpanel.parameterE
+
+    db.commit()
+
+    return updated_panel
 
 # REMOVE EXISTING CONTROL PANEL
 @app.delete("/controlpanels")
