@@ -24,16 +24,15 @@ function Header() {
                                     transition: "none",
                                     color: "transparent",
                                     "& .MuiTypography-root": {
-                                        fontSize: "15px",
-                                        textTransform: "capitalize",
-                                        fontFamily: "ChakraPetch Regular"
+                                        fontSize: "3em",
+                                        fontFamily: "Seven Segment"
                                     },
                                     "&:hover": {
                                         backgroundColor: "transparent",
                                     },
                                 }}
                             >
-                                <Link sx={{ color: "#fff" }} href="/" underline="none">
+                                <Link sx={{ color: "#00FFEE", opacity: "30%" }} href="/" underline="none">
                                     Control Panel
                                 </Link>
                             </Button>

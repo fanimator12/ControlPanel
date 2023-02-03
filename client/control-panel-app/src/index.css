@@ -1,0 +1,5 @@
+@font-face {
+    font-family: "Seven Segment";
+    src: local("SevenSegment"),
+      url(src/fonts/SevenSegment.ttf) format("truetype");
+}
