@@ -25,5 +25,16 @@ I'd let the user to also select types of control panels or change the dimensions
 
 5) If you have any additional remarks, feel free to add them here:
 
+HOW TO RUN BACKEND IN TERMINAL:
+1. `cd server`
+2. activate your virtual environment (for example: `source {YOUR_VIRTUAL_ENVIRONMENT_FOLDER}/bin/activate`)
+3. `pip install -r requirements.txt`
+4. `uvicorn main:app --reload`
+
 NOTES:
-- When running the server with `uvicorn main:app --reload`, add `/docs/` to the URL to display the Swagger UI of the API (ex. http://127.0.0.1:8000/docs).
+- When running the server, for preferance you can add `/docs/` to the URL to display the Swagger UI of the API (ex. http://127.0.0.1:8000/docs).
+
+HOW TO RUN FRONTEND IN TERMINAL:
+1. `cd client/control-panel-app`
+2. `npm install`
+3. `npm run dev`

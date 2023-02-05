@@ -6,7 +6,7 @@ function Header() {
         <AppBar
             position="fixed"
             sx={{
-                background: "#101010",
+                background: "transparent",
                 boxShadow: 0,
                 paddingTop: "0.5em",
             }}
