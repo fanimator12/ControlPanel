@@ -10,23 +10,32 @@ db = SessionLocal()
 
 
 class ParameterClass:
-    def __init__(self, *, parameter: str, value: int):
-        self.parameter = parameter
-        self.value = value
+    def __init__(self, *, type: str, parameterA: int, parameterB: int, parameterC: int, parameterD: int, parameterE: int):
+        self.type = type
+        self.parameterA = parameterA
+        self.parameterB = parameterB
+        self.parameterC = parameterC
+        self.parameterD = parameterD
+        self.parameterE = parameterE
 
 
 class ControlPanelClass:
-    def __init__(self, *, id: int, name: str, parameters: List[ParameterClass] = None):
+    def __init__(self, *, id: int, name: str, parameterType: str, parameters: List[ParameterClass] = None):
         self.id = id
         self.name = name
+        self.parameterType = parameterType
         self.parameters = parameters
 
 # Serializers
 
 
 class Parameter(BaseModel):
-    parameter: str
-    value: int
+    type: str
+    parameterA: int
+    parameterB: int
+    parameterC: int
+    parameterD: int
+    parameterE: int
 
     class Config:
         orm_mode = True
@@ -35,6 +44,7 @@ class Parameter(BaseModel):
 class ControlPanel(BaseModel):
     id: int
     name: str
+    parameterType: str
     parameters: List[Parameter] = None
 
     class Config:
@@ -47,6 +57,7 @@ class ControlPanel(BaseModel):
 def create_control_panel(controlpanel: ControlPanel):
     new_panel = models.ControlPanel(
         name=controlpanel.name,
+        parameterType=controlpanel.parameterType,
         parameters=controlpanel.parameters
     )
 
@@ -86,6 +97,7 @@ def update_control_panel(controlpanel_id: int, controlpanel: ControlPanel):
     updated_panel = db.query(models.ControlPanel).filter(
         models.ControlPanel.id == controlpanel_id).first()
     updated_panel.name = controlpanel.name
+    updated_panel.parameterType = controlpanel.parameterType
     updated_panel.parameters = controlpanel.parameters
 
     db.commit()
@@ -108,12 +120,3 @@ def delete_control_panel(controlpanel_id: int):
     db.commit()
 
     return deleted_panel
-
-# X = TypeVar('X')
-# Y = TypeVar('Y')
-
-# def lookup_name(mapping: Mapping[X, Y], key: X, default: Y) -> Y:
-#     try:
-#         return mapping[key]
-#     except KeyError:
-#         return default

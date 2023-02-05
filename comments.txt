@@ -29,7 +29,8 @@ HOW TO RUN BACKEND IN TERMINAL:
 1. `cd server`
 2. activate your virtual environment (for example: `source {YOUR_VIRTUAL_ENVIRONMENT_FOLDER}/bin/activate`)
 3. `pip install -r requirements.txt`
-4. `uvicorn main:app --reload`
+4. `python create_db.py`
+5. `uvicorn main:app --reload`
 
 NOTES:
 - When running the server, for preferance you can add `/docs/` to the URL to display the Swagger UI of the API (ex. http://127.0.0.1:8000/docs).
