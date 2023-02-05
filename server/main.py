@@ -1,4 +1,5 @@
 from typing import Optional, List
+from datetime import datetime
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 from database import SessionLocal
@@ -10,8 +11,7 @@ db = SessionLocal()
 
 
 class ParameterClass:
-    def __init__(self, *, type: str, parameterA: int, parameterB: int, parameterC: int, parameterD: int, parameterE: int):
-        self.type = type
+    def __init__(self, *, parameterA: int, parameterB: int, parameterC: int, parameterD: int, parameterE: int):
         self.parameterA = parameterA
         self.parameterB = parameterB
         self.parameterC = parameterC
@@ -20,22 +20,20 @@ class ParameterClass:
 
 
 class ControlPanelClass:
-    def __init__(self, *, id: int, name: str, parameterType: str, parameters: List[ParameterClass] = None):
+    def __init__(self, *, id: int, name: str, parameters: List[ParameterClass] = None):
         self.id = id
         self.name = name
-        self.parameterType = parameterType
         self.parameters = parameters
 
 # Serializers
 
 
 class Parameter(BaseModel):
-    type: str
-    parameterA: int
-    parameterB: int
-    parameterC: int
-    parameterD: int
-    parameterE: int
+    parameterA: Optional[int]
+    parameterB: Optional[int]
+    parameterC: Optional[int]
+    parameterD: Optional[int]
+    parameterE: Optional[int]
 
     class Config:
         orm_mode = True
@@ -44,7 +42,6 @@ class Parameter(BaseModel):
 class ControlPanel(BaseModel):
     id: int
     name: str
-    parameterType: str
     parameters: List[Parameter] = None
 
     class Config:
@@ -56,8 +53,8 @@ class ControlPanel(BaseModel):
 @app.post("/controlpanels", response_model=ControlPanel, status_code=status.HTTP_201_CREATED)
 def create_control_panel(controlpanel: ControlPanel):
     new_panel = models.ControlPanel(
+        id=controlpanel.id,
         name=controlpanel.name,
-        parameterType=controlpanel.parameterType,
         parameters=controlpanel.parameters
     )
 
@@ -97,7 +94,6 @@ def update_control_panel(controlpanel_id: int, controlpanel: ControlPanel):
     updated_panel = db.query(models.ControlPanel).filter(
         models.ControlPanel.id == controlpanel_id).first()
     updated_panel.name = controlpanel.name
-    updated_panel.parameterType = controlpanel.parameterType
     updated_panel.parameters = controlpanel.parameters
 
     db.commit()

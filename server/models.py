@@ -1,10 +1,10 @@
 from database import Base
-from sqlalchemy import String, Integer, Column, ForeignKey, CHAR
+from sqlalchemy import String, Integer, Column, ForeignKey
 from sqlalchemy.orm import relationship
 
 class Parameter(Base):
     __tablename__ = 'parameters'
-    type = Column(String, ForeignKey('controlpanel.parameterType'), primary_key=True)
+    id = Column(Integer, ForeignKey('controlpanel.id'), primary_key=True)
     parameterA = Column(Integer)
     parameterB = Column(Integer)
     parameterC = Column(Integer)
@@ -24,12 +24,13 @@ class Parameter(Base):
 class ControlPanel(Base):
     __tablename__ = 'controlpanel'
     id = Column(Integer, primary_key=True, nullable=False)
-    parameterType = Column(String, unique=True)
+    name = Column(String, nullable = False)
     parameters = relationship("Parameter", backref="parameters")
 
-    def __init__(self, id, parameters):
+    def __init__(self, id, name, parameters):
         self.id = id
+        self.name = name
         self.parameters = map(Parameter, parameters)
 
     def __repr__(self):
-        return f"<ControlPanel id={self.id} parameters={self.parameters}>"
+        return f"<ControlPanel id={self.id} name={self.name} parameters={self.parameters}>"
