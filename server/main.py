@@ -1,5 +1,6 @@
 from typing import Optional, List
 from datetime import datetime
+from enum import Enum
 from fastapi import FastAPI, HTTPException, status
 from pydantic import BaseModel
 from database import SessionLocal
@@ -9,40 +10,35 @@ app = FastAPI()
 
 db = SessionLocal()
 
+class ChoiceParameters(str, Enum):
+    a = 'A'
+    b = 'B'
+    c = 'C'
+    d = 'D'
+    e = 'E'
 
-class ParameterClass:
-    def __init__(self, *, parameterA: int, parameterB: int, parameterC: int, parameterD: int, parameterE: int):
-        self.parameterA = parameterA
-        self.parameterB = parameterB
-        self.parameterC = parameterC
-        self.parameterD = parameterD
-        self.parameterE = parameterE
-
+parameters = ['A','B','C','D','E']    
 
 class ControlPanelClass:
-    def __init__(self, *, id: int, name: str, parameters: List[ParameterClass] = None):
+    def __init__(self, *, id: int, name: str, A: int, B: int, C: int, D: int, E: int):
         self.id = id
         self.name = name
-        self.parameters = parameters
+        self.A = A
+        self.B = B
+        self.C = C
+        self.D = D
+        self.E = E
 
-# Serializers
-
-
-class Parameter(BaseModel):
-    parameterA: Optional[int]
-    parameterB: Optional[int]
-    parameterC: Optional[int]
-    parameterD: Optional[int]
-    parameterE: Optional[int]
-
-    class Config:
-        orm_mode = True
-
+# Serializer
 
 class ControlPanel(BaseModel):
     id: int
     name: str
-    parameters: List[Parameter] = None
+    A: Optional[int]
+    B: Optional[int]
+    C: Optional[int]
+    D: Optional[int]
+    E: Optional[int]
 
     class Config:
         orm_mode = True
@@ -55,7 +51,11 @@ def create_control_panel(controlpanel: ControlPanel):
     new_panel = models.ControlPanel(
         id=controlpanel.id,
         name=controlpanel.name,
-        parameters=controlpanel.parameters
+        A=controlpanel.A,
+        B=controlpanel.B,
+        C=controlpanel.C,
+        D=controlpanel.D,
+        E=controlpanel.E,
     )
 
     db_item = db.query(models.ControlPanel).filter(

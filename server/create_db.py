@@ -1,5 +1,5 @@
 from database import Base, engine
-from models import ControlPanel, Parameter
+from models import ControlPanel
 
 print("Creating database ...")
 
