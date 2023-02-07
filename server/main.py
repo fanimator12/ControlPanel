@@ -1,7 +1,6 @@
-from typing import Optional, List
-from datetime import datetime
 from enum import Enum
-from fastapi import FastAPI, HTTPException, status
+from typing import Optional, List
+from fastapi import FastAPI, HTTPException, status, Request
 from pydantic import BaseModel
 from database import SessionLocal
 import models
@@ -10,17 +9,25 @@ app = FastAPI()
 
 db = SessionLocal()
 
-class ChoiceParameters(str, Enum):
-    a = 'A'
-    b = 'B'
-    c = 'C'
-    d = 'D'
-    e = 'E'
+class Parameter(str, Enum):
+    A = 'A'
+    B = 'B'
+    C = 'C'
+    D = 'D'
+    E = 'E'
 
-parameters = ['A','B','C','D','E']    
+# class ParameterClass:
+#     def __init__(self, *, A: Optional[int], B: Optional[int], C: Optional[int], D: Optional[int], E: Optional[int]):
+#         self.A = A
+#         self.B = B
+#         self.C = C
+#         self.D = D
+#         self.E = E
 
 class ControlPanelClass:
-    def __init__(self, *, id: int, name: str, A: int, B: int, C: int, D: int, E: int):
+    def __init__(self, *, id: int, name: str, A: Optional[int], B: Optional[int], C: Optional[int], D: Optional[int], E: Optional[int]
+    # parameters=List[ParameterClass]
+    ):
         self.id = id
         self.name = name
         self.A = A
@@ -28,17 +35,30 @@ class ControlPanelClass:
         self.C = C
         self.D = D
         self.E = E
+        # self.parameters = parameters
 
-# Serializer
+# Serializers
+
+# class Parameter(BaseModel):
+#     A: Optional[int]
+#     B: Optional[int]
+#     C: Optional[int]
+#     D: Optional[int]
+#     E: Optional[int]
+
+#     class Config:
+#         orm_mode = True
+
 
 class ControlPanel(BaseModel):
     id: int
     name: str
-    A: Optional[int]
-    B: Optional[int]
-    C: Optional[int]
-    D: Optional[int]
-    E: Optional[int]
+    A: Optional[int] = None
+    B: Optional[int] = None
+    C: Optional[int] = None
+    D: Optional[int] = None
+    E: Optional[int] = None
+    # parameters: List[Parameter]
 
     class Config:
         orm_mode = True
@@ -46,7 +66,7 @@ class ControlPanel(BaseModel):
 # CREATE NEW CONTROL PANEL
 
 
-@app.post("/controlpanels", response_model=ControlPanel, status_code=status.HTTP_201_CREATED)
+@app.post("/controlpanel", response_model=ControlPanel, status_code=status.HTTP_201_CREATED)
 def create_control_panel(controlpanel: ControlPanel):
     new_panel = models.ControlPanel(
         id=controlpanel.id,
@@ -73,28 +93,80 @@ def create_control_panel(controlpanel: ControlPanel):
 # GET CONTROL PANEL
 
 
-@app.get("/controlpanels/{controlpanel_id}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
-def get_control_panel(controlpanel_id: int):
+@app.get("/controlpanel/{name}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
+def get_control_panel(name: str):
     controlpanel = db.query(models.ControlPanel).filter(
-        models.ControlPanel.id == controlpanel_id).first()
+        models.ControlPanel.name == name).first()
     return controlpanel
+
+# GET PARAMETER
+
+
+@app.get("/controlpanel/{name}/{param}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
+def get_parameter(name: str, param: Parameter):
+    controlpanel = db.query(models.ControlPanel).filter(
+        models.ControlPanel.name == name).first()
+
+    if param is Parameter.A:
+        return {"A": param}
+    if param is Parameter.B:
+        return {"B": param}
+    if param is Parameter.C:
+        return {"C": param}
+    if param is Parameter.D:
+        return {"D": param}
+    if param is Parameter.E:
+        return {"E": param}
+
+# SET PARAMETER
+
+
+@app.put("/controlpanel/{name}/{param}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
+def update_parameter(name:str, param:Parameter):
+    controlpanel = db.query(models.ControlPanel).filter(
+        models.ControlPanel.name == name).first()
+
+    if param is Parameter.A:
+        controlpanel.A = param.A
+        return {"A": param}
+    if param is Parameter.B:
+        controlpanel.B = param.B
+        return {"B": param}
+    if param is Parameter.C:
+        controlpanel.C = param.C
+        return {"C": param}
+    if param is Parameter.D:
+        controlpanel.D = param.D
+        return {"D": param}
+    if param is Parameter.E:
+        controlpanel.E = param.E
+        return {"E": param}
+
+    db.commit()
+
+    return param
+
 
 # GET ALL CONTROL PANELS
 
 
-@app.get("/controlpanels", response_model=List[ControlPanel], status_code=200)
+@app.get("/controlpanel", response_model=List[ControlPanel], status_code=200)
 def get_all_control_panels():
     return db.query(models.ControlPanel).all()
 
 # UPDATE CONTROL PANEL
 
 
-@app.put("/controlpanels/{controlpanel_id}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
-def update_control_panel(controlpanel_id: int, controlpanel: ControlPanel):
+@app.put("/controlpanel/{name}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
+def update_control_panel(name: str, controlpanel: ControlPanel):
     updated_panel = db.query(models.ControlPanel).filter(
-        models.ControlPanel.id == controlpanel_id).first()
+        models.ControlPanel.name == name).first()
     updated_panel.name = controlpanel.name
-    updated_panel.parameters = controlpanel.parameters
+    updated_panel.A = controlpanel.A
+    updated_panel.B = controlpanel.B
+    updated_panel.C = controlpanel.C
+    updated_panel.D = controlpanel.D
+    updated_panel.E = controlpanel.E
 
     db.commit()
 
@@ -103,10 +175,10 @@ def update_control_panel(controlpanel_id: int, controlpanel: ControlPanel):
 # REMOVE EXISTING CONTROL PANEL
 
 
-@app.delete("/controlpanels")
-def delete_control_panel(controlpanel_id: int):
+@app.delete("/controlpanel")
+def delete_control_panel(name: str):
     deleted_panel = db.query(models.ControlPanel).filter(
-        models.ControlPanel.id == controlpanel_id).first()
+        models.ControlPanel.name == name).first()
 
     if deleted_panel is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,

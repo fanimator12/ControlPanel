@@ -1,5 +1,4 @@
 import {
-  SelectChangeEvent,
   FormControl,
   Select,
   MenuItem,

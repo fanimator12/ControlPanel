@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: `/controlpanels/`,
+  baseURL: `/controlpanels`,
 });
 
 export function getApiRoot() {

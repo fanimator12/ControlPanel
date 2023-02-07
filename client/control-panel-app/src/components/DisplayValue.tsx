@@ -1,17 +1,32 @@
 import { Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import { getApiRoot } from "../api/api_root";
 import ChoiceTypeProps from "../interfaces/ChoiceProps";
 
-const DisplayValue = ({parameterChoice}: ChoiceTypeProps) => {
+const DisplayValue = ({ parameterChoice }: ChoiceTypeProps) => {
+  const [parameter, setParameter] = useState<any>({});
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(false);
 
-  const test_data = {
-    id: 1,
-    name: "test_panel",
-    A: 48,
-    B: 95,
-    C: -15,
-    D: -56,
-    E: 22,
+  let { controlpanel_name } = useParams();
+
+  const fetchParameter = async () => {
+    try {
+      setLoading(true);
+      const results = await getApiRoot().get(`/${controlpanel_name}/parameters/${parameterChoice}/`);
+      setParameter(results.data);
+      setLoading(false);
+    } catch (error) {
+      setParameter({});
+      setLoading(false);
+      setError(true);
+    }
   };
+
+  useEffect(() => {
+    fetchParameter();
+  }, [parameterChoice]);
 
   return (
     <Typography
@@ -21,11 +36,11 @@ const DisplayValue = ({parameterChoice}: ChoiceTypeProps) => {
         fontFamily: "Seven Segment",
       }}
     >
-      {parameterChoice == "A" && test_data.A}
-      {parameterChoice == "B" && test_data.B}
-      {parameterChoice == "C" && test_data.C}
-      {parameterChoice == "D" && test_data.D}
-      {parameterChoice == "E" && test_data.E}
+      {parameterChoice == "A" && parameter.A}
+      {parameterChoice == "B" && parameter.B}
+      {parameterChoice == "C" && parameter.C}
+      {parameterChoice == "D" && parameter.D}
+      {parameterChoice == "E" && parameter.E}
     </Typography>
   );
 };

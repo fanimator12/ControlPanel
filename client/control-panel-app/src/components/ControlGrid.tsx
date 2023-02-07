@@ -20,12 +20,12 @@ const ControlGrid = () => {
   const handleIncrement = async () => setParameterValue(parameterValue + 1);
   const handleDecrement = async () => setParameterValue(parameterValue - 1);
 
-  let { controlpanel_id } = useParams();
+  let { controlpanel_name } = useParams();
 
   const fetchControlPanel = async () => {
     try {
       setLoading(true);
-      const results = await getApiRoot().get(`/${controlpanel_id}/`);
+      const results = await getApiRoot().get(`/control_panels/${controlpanel_name}/`);
       setControlPanel(results.data);
       setLoading(false);
     } catch (error) {
@@ -50,9 +50,21 @@ const ControlGrid = () => {
     console.log("Value " + parameterValue);
   };
 
-  useEffect(() => {
-    fetchControlPanel();
-  }, [controlpanel_id]);
+  const handleEnterPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (
+      e.key === "Enter" &&
+      parameterValue !== undefined &&
+      parameterValue !== null &&
+      parameterValue !== 0 &&
+      controlType
+    ) {
+      handleValue;
+    }
+  };
+
+  // useEffect(() => {
+  //   fetchControlPanel();
+  // }, [controlpanel_id]);
 
   const test_data = {
     id: 1,
@@ -64,6 +76,61 @@ const ControlGrid = () => {
     E: 22,
   };
 
+  const ControlBox = () => {
+    return (
+      <div className="control-component inactive">
+        <div className="control-component-inside">
+          <Grid
+            container
+            display="flex"
+            alignItems="center"
+            justifyContent="space-between"
+            flexDirection="row"
+          >
+            <ParameterChoice
+              handleChoice={handleChoice}
+              parameterChoice={parameterChoice}
+            />
+            <ControlType
+              handleControl={handleControl}
+              controlType={controlType}
+            />
+            <Grid
+              xs={12}
+              container
+              display="flex"
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {controlType == "+/-" && (
+                <SetByOne
+                  value={parameterValue}
+                  handleIncrement={handleIncrement}
+                  handleDecrement={handleDecrement}
+                />
+              )}
+
+              {controlType == "set" && (
+                <SetValue
+                  value={parameterValue}
+                  handleValue={handleValue}
+                  handleEnterPress={handleEnterPress}
+                />
+              )}
+
+              {controlType == "display" && (
+                <DisplayValue
+                  handleChoice={handleChoice}
+                  parameterChoice={parameterChoice}
+                />
+              )}
+            </Grid>
+          </Grid>
+        </div>
+      </div>
+    );
+  };
   return (
     <Container sx={{ width: "100%" }}>
       <Grid
@@ -79,56 +146,10 @@ const ControlGrid = () => {
       >
         <ControlPanelHandlers />
         <Grid item>
-          <div className="control-component inactive">
-            <div className="control-component-inside">
-              <Grid
-                container
-                display="flex"
-                alignItems="center"
-                justifyContent="space-between"
-                flexDirection="row"
-              >
-                <ParameterChoice
-                  handleChoice={handleChoice}
-                  parameterChoice={parameterChoice}
-                />
-                <ControlType
-                  handleControl={handleControl}
-                  controlType={controlType}
-                />
-                <Grid
-                  xs={12}
-                  container
-                  display="flex"
-                  flexDirection="row"
-                  justifyContent="center"
-                  alignItems="center"
-                >
-                  {controlType == "+/-" && (
-                    <SetByOne
-                      value={parameterValue}
-                      handleIncrement={handleIncrement}
-                      handleDecrement={handleDecrement}
-                    />
-                  )}
-
-                  {controlType == "set" && (
-                    <SetValue
-                      value={parameterValue}
-                      handleValue={handleValue}
-                    />
-                  )}
-
-                  {controlType == "display" && (
-                    <DisplayValue
-                      handleChoice={handleChoice}
-                      parameterChoice={parameterChoice}
-                    />
-                  )}
-                </Grid>
-              </Grid>
-            </div>
-          </div>
+          <ControlBox />
+        </Grid>
+        <Grid item>
+          <ControlBox />
         </Grid>
       </Grid>
     </Container>

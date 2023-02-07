@@ -9,9 +9,9 @@ const ControlPanelHandlers = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
 
-  let { controlpanel_id } = useParams();
+  let { controlpanel_name } = useParams();
 
-  const handleAdd = async (event: any) => {
+  const handleNew = async (event: any) => {
     try {
       setLoading(true);
       setControlPanel({});
@@ -27,7 +27,7 @@ const ControlPanelHandlers = () => {
   const handleDelete = async (event: any) => {
     try {
       setLoading(true);
-      const results = await getApiRoot().delete(`/${controlpanel_id}/`);
+      const results = await getApiRoot().delete(`/${controlpanel_name}`);
       setControlPanel(results.data);
       setLoading(false);
       console.log("Control panel removed.");
@@ -62,11 +62,11 @@ const ControlPanelHandlers = () => {
       <Grid sx={{}}>
         <Button
           className="button"
-          onClick={handleAdd}
+          onClick={handleNew}
           sx={{ borderRadius: "10px" }}
         >
           <div className="button-inside">
-            <Typography sx={styleTypography}>Add</Typography>
+            <Typography sx={styleTypography}>New</Typography>
           </div>
         </Button>
         <Button

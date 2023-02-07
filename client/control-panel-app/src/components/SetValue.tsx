@@ -1,10 +1,7 @@
 import { Box, FormControl, Input } from "@mui/material";
-import { useState } from "react";
 import ValueProps from "../interfaces/ValueProps";
 
-const SetValue = ({handleValue}: ValueProps) => {
-
-  const [parameterValue, setParameterValue] = useState(0);
+const SetValue = ({value, handleValue, handleEnterPress}: ValueProps) => {
 
   return (
     <Box component="form" noValidate autoComplete="off">
@@ -25,8 +22,9 @@ const SetValue = ({handleValue}: ValueProps) => {
         }}
       >
         <Input
-          defaultValue={parameterValue || 0}
-          onKeyPress={handleValue}
+          defaultValue={value || 0}
+          onChange={handleValue}
+          onKeyPress={handleEnterPress}
           sx={{
             display: "flex",
             justifyContent: "center",
