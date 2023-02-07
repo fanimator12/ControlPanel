@@ -17,7 +17,8 @@ ANSWER:
 
 3) What was the most time consuming part of this challenge?
 
-
+On the backend in the beginning I tried to approach a more complicated solution to set up the parameters (with a nested list of parameters in the db). 
+Meaning that I created a separate table for Parameters in connection with ControlPanel, but later on I realized they were not necessarily needed and I just overcomplicated it. 
 
 4) If this was a real application, what are a few features you would add to improve user-experience?
 

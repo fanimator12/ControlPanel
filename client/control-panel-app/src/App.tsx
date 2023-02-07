@@ -1,16 +1,14 @@
-import './App.css'
-import ComponentGrid from './components/ComponentGrid'
-import Header from './components/Header'
+import "./App.css";
+import ControlGrid from "./components/ControlGrid";
+import Header from "./components/Header";
 
 function App() {
-
   return (
     <>
       <Header />
-      <ComponentGrid />
+      <ControlGrid />
     </>
-
-  )
+  );
 }
 
-export default App
+export default App;
