@@ -9,12 +9,13 @@ app = FastAPI()
 
 db = SessionLocal()
 
-class Parameter(str, Enum):
-    A = 'A'
-    B = 'B'
-    C = 'C'
-    D = 'D'
-    E = 'E'
+
+# class Parameter(str, Enum):
+#     A = "A"
+#     B = "B"
+#     C = "C"
+#     D = "D"
+#     E = "E"
 
 # class ParameterClass:
 #     def __init__(self, *, A: Optional[int], B: Optional[int], C: Optional[int], D: Optional[int], E: Optional[int]):
@@ -24,10 +25,11 @@ class Parameter(str, Enum):
 #         self.D = D
 #         self.E = E
 
+
 class ControlPanelClass:
     def __init__(self, *, id: int, name: str, A: Optional[int], B: Optional[int], C: Optional[int], D: Optional[int], E: Optional[int]
-    # parameters=List[ParameterClass]
-    ):
+                 # parameters=List[ParameterClass]
+                 ):
         self.id = id
         self.name = name
         self.A = A
@@ -99,52 +101,61 @@ def get_control_panel(name: str):
         models.ControlPanel.name == name).first()
     return controlpanel
 
-# GET PARAMETER
+# # GET PARAMETER
 
 
-@app.get("/controlpanel/{name}/{param}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
-def get_parameter(name: str, param: Parameter):
-    controlpanel = db.query(models.ControlPanel).filter(
-        models.ControlPanel.name == name).first()
+# @app.get("/controlpanel/{id}/{name}/{param}", response_model=ControlPanel, status_code=status.HTTP_200_OK, response_model_exclude_unset=True)
+# def get_parameter(id:int, name:str, param: Parameter):
+#     controlpanel = db.query(models.ControlPanel).filter(
+#         models.ControlPanel.name == name).first()
 
-    if param is Parameter.A:
-        return {"A": param}
-    if param is Parameter.B:
-        return {"B": param}
-    if param is Parameter.C:
-        return {"C": param}
-    if param is Parameter.D:
-        return {"D": param}
-    if param is Parameter.E:
-        return {"E": param}
+#     if param is Parameter.A:
+#         return {"A": controlpanel.A}
+#     if param is Parameter.B:
+#         return {"B": controlpanel.B}
+#     if param is Parameter.C:
+#         return {"C": controlpanel.C}
+#     if param is Parameter.D:
+#         return {"D": controlpanel.D}
+#     if param is Parameter.E:
+#         return {"E": controlpanel.E}
 
-# SET PARAMETER
+# # SET PARAMETER           
 
 
-@app.put("/controlpanel/{name}/{param}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
-def update_parameter(name:str, param:Parameter):
-    controlpanel = db.query(models.ControlPanel).filter(
-        models.ControlPanel.name == name).first()
+# @app.put("/controlpanel/{name}/{param}", response_model=ControlPanel, status_code=status.HTTP_200_OK)
+# def update_parameter(name:str, param: Parameter, value: int):
 
-    if param is Parameter.A:
-        controlpanel.A = param.A
-        return {"A": param}
-    if param is Parameter.B:
-        controlpanel.B = param.B
-        return {"B": param}
-    if param is Parameter.C:
-        controlpanel.C = param.C
-        return {"C": param}
-    if param is Parameter.D:
-        controlpanel.D = param.D
-        return {"D": param}
-    if param is Parameter.E:
-        controlpanel.E = param.E
-        return {"E": param}
+#     if param is Parameter.A:
+#         new_parameter = db.query(models.ControlPanel).filter(
+#         models.ControlPanel.name == name).first()
+#         new_parameter.A = value
+#         return {"A": new_parameter}
+#     if param is Parameter.B:
+#         new_parameter = db.query(models.ControlPanel).filter(
+#         models.ControlPanel.name == name).first()
+#         new_parameter.B = value
+#         return {"B": new_parameter}
+#     if param is Parameter.C:
+#         new_parameter = db.query(models.ControlPanel).filter(
+#         models.ControlPanel.name == name).first()
+#         new_parameter.C = value
+#         return {"C": new_parameter}
+#     if param is Parameter.D:
+#         new_parameter = db.query(models.ControlPanel).filter(
+#         models.ControlPanel.name == name).first()
+#         new_parameter.D = value
+#         return {"D": new_parameter}
+#     if param is Parameter.E:
+#         new_parameter = db.query(models.ControlPanel).filter(
+#         models.ControlPanel.name == name).first()
+#         new_parameter.E = value
+#         return {"E": new_parameter}
 
-    db.commit()
+#     new_parameter.save()
+#     db.commit()
 
-    return param
+#     return new_parameter
 
 
 # GET ALL CONTROL PANELS

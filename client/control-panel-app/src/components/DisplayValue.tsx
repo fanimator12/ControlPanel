@@ -14,7 +14,7 @@ const DisplayValue = ({ parameterChoice }: ChoiceTypeProps) => {
   const fetchParameter = async () => {
     try {
       setLoading(true);
-      const results = await getApiRoot().get(`/${controlpanel_name}/parameters/${parameterChoice}/`);
+      const results = await getApiRoot().get(`/${controlpanel_name}`);
       setParameter(results.data);
       setLoading(false);
     } catch (error) {
