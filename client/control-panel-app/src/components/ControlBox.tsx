@@ -1,5 +1,6 @@
 import { Grid, SelectChangeEvent } from "@mui/material";
 import { useState } from "react";
+import { getData } from "../fake_data/fake_data";
 import ControlType from "./ControlType";
 import DisplayValue from "./DisplayValue";
 import ParameterChoice from "./ParameterChoice";
@@ -7,35 +8,84 @@ import SetByOne from "./SetByOne";
 import SetValue from "./SetValue";
 
 const ControlBox = () => {
-  const [parameterValue, setParameterValue] = useState(0);
+  const fake_data = getData();
+
   const [parameterChoice, setParameterChoice] = useState("[]");
+  // const [parameterValue, setParameterValue] = useState(0);
+  const [aValue, setAValue] = useState(fake_data[0].A);
+  const [bValue, setBValue] = useState(fake_data[0].B);
+  const [cValue, setCValue] = useState(fake_data[0].C);
+  const [dValue, setDValue] = useState(fake_data[0].D);
+  const [eValue, setEValue] = useState(fake_data[0].E);
   const [controlType, setControlType] = useState("[]");
 
-  const handleIncrement = async () => setParameterValue(parameterValue + 1);
-  const handleDecrement = async () => setParameterValue(parameterValue - 1);
+  
+  const handleIncrement = () => {
+    if (parameterChoice == 'A')
+      setAValue(aValue + 1);
+    console.log("Value of A now: " + aValue);
+    if (parameterChoice == 'B')
+      setBValue(bValue + 1);
+    console.log("Value of B now: " + bValue);
+    if (parameterChoice == 'C')
+      setCValue(cValue + 1);
+    console.log("Value of C now: " + cValue);
+    if (parameterChoice == 'D')
+      setDValue(dValue + 1);
+    console.log("Value of D now: " + dValue);
+    if (parameterChoice == 'E')
+      setEValue(eValue + 1);
+    console.log("Value of E now: " + eValue);
+  };
 
-  const handleChoice = async (event: SelectChangeEvent) => {
-    await setParameterChoice(event.target.value);
+  const handleDecrement = () => {
+    if (parameterChoice == 'A')
+      setAValue(aValue - 1);
+    console.log("Value of A now: " + aValue);
+    if (parameterChoice == 'B')
+      setBValue(bValue - 1);
+    console.log("Value of B now: " + bValue);
+    if (parameterChoice == 'C')
+      setCValue(cValue - 1);
+    console.log("Value of C now: " + cValue);
+    if (parameterChoice == 'D')
+      setDValue(dValue - 1);
+    console.log("Value of D now: " + dValue);
+    if (parameterChoice == 'E')
+      setEValue(eValue - 1);
+    console.log("Value of E now: " + eValue);
+  }
+
+  const handleChoice = (event: SelectChangeEvent) => {
+    setParameterChoice(event.target.value);
     console.log("Parameter " + parameterChoice);
   };
 
-  const handleControl = async (event: SelectChangeEvent) => {
-    await setControlType(event.target.value);
+  const handleControl = (event: SelectChangeEvent) => {
+    setControlType(event.target.value);
     console.log("Control type " + "'" + controlType + "'");
   };
 
-  const handleValue = async (event: any) => {
-    await setParameterValue(event.target.value);
-    console.log("Value " + parameterValue);
+  const handleValue = (event: any) => {
+    if (parameterChoice == "A") setAValue(event.target.value);
+    console.log("Value of A now: " + aValue);
+    if (parameterChoice == "B") setBValue(event.target.value);
+    console.log("Value of B now: " + bValue);
+    if (parameterChoice == "C") setCValue(event.target.value);
+    console.log("Value of C now: " + cValue);
+    if (parameterChoice == "D") setDValue(event.target.value);
+    console.log("Value of D now: " + dValue);
+    if (parameterChoice == "E") setEValue(event.target.value);
+    console.log("Value of E now: " + eValue);
   };
 
-  const handleEnterPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleEnterPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (
       e.key === "Enter" &&
-      parameterValue !== undefined &&
-      parameterValue !== null &&
-      parameterValue !== 0 &&
-      controlType
+      aValue || bValue || cValue || dValue || eValue !== undefined &&
+      aValue || bValue || cValue || dValue || eValue !== null &&
+      aValue || bValue || cValue || dValue || eValue !== 0 &&
+      controlType !== null
     ) {
       handleValue;
     }
@@ -52,6 +102,7 @@ const ControlBox = () => {
           flexDirection="row"
         >
           <ParameterChoice
+            value={aValue || bValue || cValue || dValue || eValue}
             handleChoice={handleChoice}
             parameterChoice={parameterChoice}
           />
@@ -69,7 +120,7 @@ const ControlBox = () => {
           >
             {controlType == "+/-" && (
               <SetByOne
-                value={parameterValue}
+                value={aValue || bValue || cValue || dValue || eValue}
                 handleIncrement={handleIncrement}
                 handleDecrement={handleDecrement}
               />
@@ -77,7 +128,7 @@ const ControlBox = () => {
 
             {controlType == "set" && (
               <SetValue
-                value={parameterValue}
+                value={aValue || bValue || cValue || dValue || eValue}
                 handleValue={handleValue}
                 handleEnterPress={handleEnterPress}
               />
@@ -85,6 +136,7 @@ const ControlBox = () => {
 
             {controlType == "display" && (
               <DisplayValue
+                value={aValue || bValue || cValue || dValue || eValue}
                 handleChoice={handleChoice}
                 parameterChoice={parameterChoice}
               />

@@ -1,32 +1,28 @@
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
 import { getApiRoot } from "../api/api_root";
+import { getData } from "../fake_data/fake_data";
 import ChoiceTypeProps from "../interfaces/ChoiceProps";
+import ValueProps from "../interfaces/ValueProps";
 
-const DisplayValue = ({ parameterChoice }: ChoiceTypeProps) => {
-  const [parameter, setParameter] = useState<any>({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  let { controlpanel_name } = useParams();
+const DisplayValue = ({value, parameterChoice }: ChoiceTypeProps) => {
+  const [controlpanel, setControlPanel] = useState({});
+  const fake_data = getData();
 
   const fetchParameter = async () => {
     try {
-      setLoading(true);
-      const results = await getApiRoot().get(`/${controlpanel_name}`);
-      setParameter(results.data);
-      setLoading(false);
+      setControlPanel(fake_data);
+      // const results = await getApiRoot().get(`/`);
+      // setParameter(results.data);
     } catch (error) {
-      setParameter({});
-      setLoading(false);
-      setError(true);
+      setControlPanel({});
     }
   };
 
+
   useEffect(() => {
     fetchParameter();
-  }, [parameterChoice]);
+  }, [parameterChoice, value]);
 
   return (
     <Typography
@@ -36,11 +32,12 @@ const DisplayValue = ({ parameterChoice }: ChoiceTypeProps) => {
         fontFamily: "Seven Segment",
       }}
     >
-      {parameterChoice == "A" && parameter.A}
-      {parameterChoice == "B" && parameter.B}
-      {parameterChoice == "C" && parameter.C}
-      {parameterChoice == "D" && parameter.D}
-      {parameterChoice == "E" && parameter.E}
+      {/* Only takes the first instance from the data */}
+      {parameterChoice == "A" && fake_data[0].A}
+      {parameterChoice == "B" && fake_data[0].B}
+      {parameterChoice == "C" && fake_data[0].C}
+      {parameterChoice == "D" && fake_data[0].D}
+      {parameterChoice == "E" && fake_data[0].E}
     </Typography>
   );
 };

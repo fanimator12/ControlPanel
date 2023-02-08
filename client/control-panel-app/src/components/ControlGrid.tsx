@@ -7,29 +7,21 @@ import ControlPanelHandlers from "./ControlPanelHandlers";
 
 const ControlGrid = () => {
   const [controlpanel, setControlPanel] = useState<any>({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
 
   let { controlpanel_name } = useParams();
 
   const fetchControlPanel = async () => {
     try {
-      setLoading(true);
-      const results = await getApiRoot().get(
-        `/controlpanel/${controlpanel_name}/`
-      );
+      const results = await getApiRoot().get(`/`);
       setControlPanel(results.data);
-      setLoading(false);
     } catch (error) {
       setControlPanel({});
-      setLoading(false);
-      setError(true);
     }
   };
 
-  // useEffect(() => {
-  //   fetchControlPanel();
-  // }, [controlpanel_id]);
+  useEffect(() => {
+    fetchControlPanel();
+  }, [controlpanel_name]);
 
   return (
     <Container sx={{ width: "100%" }}>

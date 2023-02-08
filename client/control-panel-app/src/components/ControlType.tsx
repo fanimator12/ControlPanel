@@ -19,9 +19,6 @@ const ControlType = ({handleControl, controlType}: ControlProps) => {
           fontSize: "20px",
           fontFamily: "Seven Segment",
           color: "#00FFEE",
-          // "& .MuiSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
-          //   padding: 2,
-          // },
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "transparent",
           },

@@ -40,3 +40,6 @@ HOW TO RUN FRONTEND IN TERMINAL:
 1. `cd client/control-panel-app`
 2. `npm install`
 3. `npm run dev`
+
+(!) Note, that in my approach of solving this challenge does not include the connection between the API (the backend) and the frontend, as I have not found the correct way of connecting to the endpoint from the frontend. 
+The project is incomplete and does not meet every requirement that set as I had extremely limited time next to my studies and student job to work on this, however, I decided to send it in, so you can see what I tried to achieve.

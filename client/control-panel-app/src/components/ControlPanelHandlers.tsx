@@ -5,49 +5,33 @@ import { getApiRoot } from "../api/api_root";
 import styleTypography from "./styleTypography";
 
 const ControlPanelHandlers = () => {
-  const [controlpanel, setControlPanel] = useState<any>({});
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  let { controlpanel_name } = useParams();
+  const [controlpanel, setControlPanel] = useState<any>(null);
 
   const handleNew = async (event: any) => {
     try {
-      setLoading(true);
-      setControlPanel({});
-      setLoading(false);
+      setControlPanel(null);
       console.log("New control panel created.");
     } catch (error) {
-      setLoading(false);
-      setError(true);
       console.log("Something went wrong. ", error);
     }
   };
 
   const handleDelete = async (event: any) => {
     try {
-      setLoading(true);
-      const results = await getApiRoot().delete(`/${controlpanel_name}`);
-      setControlPanel(results.data);
-      setLoading(false);
+      // await getApiRoot().delete(`/`);
+      setControlPanel(null);
       console.log("Control panel removed.");
     } catch (error) {
-      setLoading(false);
-      setError(true);
       console.log("Something went wrong. ", error);
     }
   };
 
   const handleSave = async (event: any) => {
     try {
-      setLoading(true);
-      const results = await getApiRoot().post(`/`);
-      setControlPanel(results.data);
-      setLoading(false);
+      // const results = await getApiRoot().post(`/`);
+      // setControlPanel(results.data);
       console.log("Control panel saved.");
     } catch (error) {
-      setLoading(false);
-      setError(true);
       console.log("Something went wrong. ", error);
     }
   };
@@ -59,7 +43,7 @@ const ControlPanelHandlers = () => {
       flexDirection="row"
       justifyContent="space-between"
     >
-      <Grid sx={{}}>
+      <Grid>
         <Button
           className="button"
           onClick={handleNew}

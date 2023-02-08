@@ -18,9 +18,6 @@ const ParameterChoice = ({ handleChoice, parameterChoice }: ChoiceProps) => {
           fontSize: "20px",
           fontFamily: "Seven Segment",
           color: "#00FFEE",
-          // "& .MuiSelect-select.MuiInputBase-input.MuiOutlinedInput-input": {
-          //   padding: "16px 15px",
-          // },
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "transparent",
           },

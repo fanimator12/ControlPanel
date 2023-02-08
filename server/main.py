@@ -2,6 +2,7 @@ from enum import Enum
 from typing import Optional, List
 from fastapi import FastAPI, HTTPException, status, Request
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 from database import SessionLocal
 import models
 
@@ -9,27 +10,24 @@ app = FastAPI()
 
 db = SessionLocal()
 
+origins = [
+    "http://localhost:8000",
+    "localhost:8000",
+    "http://localhost:5173",
+    "localhost:5173"
+]
 
-# class Parameter(str, Enum):
-#     A = "A"
-#     B = "B"
-#     C = "C"
-#     D = "D"
-#     E = "E"
 
-# class ParameterClass:
-#     def __init__(self, *, A: Optional[int], B: Optional[int], C: Optional[int], D: Optional[int], E: Optional[int]):
-#         self.A = A
-#         self.B = B
-#         self.C = C
-#         self.D = D
-#         self.E = E
-
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"]
+)
 
 class ControlPanelClass:
-    def __init__(self, *, id: int, name: str, A: Optional[int], B: Optional[int], C: Optional[int], D: Optional[int], E: Optional[int]
-                 # parameters=List[ParameterClass]
-                 ):
+    def __init__(self, *, id: int, name: str, A: Optional[int], B: Optional[int], C: Optional[int], D: Optional[int], E: Optional[int]):
         self.id = id
         self.name = name
         self.A = A
@@ -37,20 +35,8 @@ class ControlPanelClass:
         self.C = C
         self.D = D
         self.E = E
-        # self.parameters = parameters
 
-# Serializers
-
-# class Parameter(BaseModel):
-#     A: Optional[int]
-#     B: Optional[int]
-#     C: Optional[int]
-#     D: Optional[int]
-#     E: Optional[int]
-
-#     class Config:
-#         orm_mode = True
-
+# Serializer
 
 class ControlPanel(BaseModel):
     id: int
@@ -60,10 +46,10 @@ class ControlPanel(BaseModel):
     C: Optional[int] = None
     D: Optional[int] = None
     E: Optional[int] = None
-    # parameters: List[Parameter]
 
     class Config:
         orm_mode = True
+
 
 # CREATE NEW CONTROL PANEL
 
